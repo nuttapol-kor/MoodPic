@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activities.RegisterActivity">
+
+    <ImageView
+        android:id="@+id/registUserImage"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        android:src="@drawable/add_user"
+        app:layout_constraintBottom_toTopOf="@+id/registName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <EditText
+        android:id="@+id/registName"
+        android:layout_width="265dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/reg_edittext_style"
+        android:ems="10"
+        android:hint="Name"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toTopOf="@+id/registMail"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/registMail"
+        android:layout_width="265dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/reg_edittext_style"
+        android:ems="10"
+        android:hint="Email"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toTopOf="@+id/guideline"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/resgistPassword"
+        android:layout_width="265dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/reg_edittext_style"
+        android:ems="10"
+        android:hint="Password"
+        android:inputType="textPassword"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/registMail" />
+
+    <EditText
+        android:id="@+id/registPassword2"
+        android:layout_width="265dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/reg_edittext_style"
+        android:ems="10"
+        android:hint="Confirm Password"
+        android:inputType="textPassword"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/resgistPassword" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/regBtn"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:layout_marginEnd="-120dp"
+        android:background="@drawable/reg_btn_style"
+        android:text="Register"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="@+id/registPassword2"
+        app:layout_constraintHorizontal_bias="0.296"
+        app:layout_constraintStart_toEndOf="@+id/signInBtn"
+        app:layout_constraintTop_toBottomOf="@+id/registPassword2" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/regBtn"
+        app:layout_constraintEnd_toEndOf="@+id/regBtn"
+        app:layout_constraintStart_toStartOf="@+id/regBtn"
+        app:layout_constraintTop_toTopOf="@+id/regBtn"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/signInBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="75dp"
+        android:singleLine="false"
+        android:text="Sign In instead?"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/registPassword2"
+        app:layout_constraintTop_toBottomOf="@+id/registPassword2" />
+</androidx.constraintlayout.widget.ConstraintLayout>
