@@ -24,6 +24,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
+import org.classapp.moodpic.Models.User
 import org.classapp.moodpic.R
 
 class RegisterActivity : AppCompatActivity() {
@@ -116,7 +117,13 @@ class RegisterActivity : AppCompatActivity() {
                 "email" to currentUser.email,
                 "profile_image" to null
             )
-            db.collection("users").add(no_image_user).addOnSuccessListener {
+            val noImageUser = User(
+                id = currentUser.uid,
+                username = username,
+                email = currentUser.email,
+                profileImageUrl = null
+            )
+            db.collection("users").add(noImageUser.toMap()).addOnSuccessListener {
                 Toast.makeText(this, "Register Complete!!", Toast.LENGTH_LONG).show()
                 val intent = Intent(this, HomeActivity::class.java)
                 startActivity(intent)
@@ -128,13 +135,13 @@ class RegisterActivity : AppCompatActivity() {
             imageRef.putFile(it).addOnCompleteListener{ task ->
                 if (task.isSuccessful) {
                     imageRef.downloadUrl.addOnSuccessListener { uri ->
-                        val user = hashMapOf(
-                            "userId" to currentUser.uid,
-                            "username" to username,
-                            "email" to currentUser.email,
-                            "profile_image" to uri.toString()
+                        val user = User(
+                            id = currentUser.uid,
+                            username = username,
+                            email = currentUser.email,
+                            profileImageUrl = uri.toString()
                         )
-                        db.collection("users").add(user).addOnSuccessListener {
+                        db.collection("users").add(user.toMap()).addOnSuccessListener {
                             Toast.makeText(this, "Register Complete!!", Toast.LENGTH_LONG).show()
                             val intent = Intent(this, HomeActivity::class.java)
                             startActivity(intent)

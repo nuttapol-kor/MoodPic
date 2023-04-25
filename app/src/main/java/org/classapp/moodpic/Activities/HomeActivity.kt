@@ -64,12 +64,12 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val headerEmail = headerView.findViewById<TextView>(R.id.navHeaderEmail)
         val profileImage = headerView.findViewById<ImageView>(R.id.navHeaderImage)
         if (user != null) {
-            var authEmail = user.email
-            db.collection("users").whereEqualTo("email", authEmail).get().addOnSuccessListener { documents ->
+            var userId = user.uid
+            db.collection("users").whereEqualTo("id", userId).get().addOnSuccessListener { documents ->
                 if (!documents.isEmpty) {
                     headerUsername.text = documents.documents[0].getString("username")
                     headerEmail.text = documents.documents[0].getString("email")
-                    var imageUrl = documents.documents[0].getString("profile_image")
+                    var imageUrl = documents.documents[0].getString("profileImageUrl")
                     if (imageUrl != null) {
                         Glide.with(this).load(imageUrl).apply(RequestOptions.circleCropTransform()).into(profileImage)
                     }
