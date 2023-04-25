@@ -1,8 +1,12 @@
 package org.classapp.moodpic.Activities
 
+import android.app.Dialog
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Gravity
 import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.TextView
@@ -74,6 +78,12 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 Toast.makeText(this, exception.message, Toast.LENGTH_SHORT).show()
             }
         }
+
+        // popup dialog
+//        popupAddPost.setContentView(R.layout.popup_add_post)
+//        popupAddPost.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+//        popupAddPost.window?.setLayout(Toolbar.LayoutParams.MATCH_PARENT, Toolbar.LayoutParams.WRAP_CONTENT)
+//        popupAddPost.window?.attributes?.gravity = Gravity.TOP
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {

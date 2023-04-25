@@ -111,6 +111,7 @@ class RegisterActivity : AppCompatActivity() {
         val db = Firebase.firestore
         if (imageUri == null) {
             val no_image_user = hashMapOf(
+                "userId" to currentUser.uid,
                 "username" to username,
                 "email" to currentUser.email,
                 "profile_image" to null
@@ -128,6 +129,7 @@ class RegisterActivity : AppCompatActivity() {
                 if (task.isSuccessful) {
                     imageRef.downloadUrl.addOnSuccessListener { uri ->
                         val user = hashMapOf(
+                            "userId" to currentUser.uid,
                             "username" to username,
                             "email" to currentUser.email,
                             "profile_image" to uri.toString()
