@@ -1,6 +1,7 @@
 package org.classapp.moodpic.Adapters
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,10 +11,14 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.google.firebase.Timestamp
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import org.classapp.moodpic.Activities.PostDetailActivity
 import org.classapp.moodpic.R
+import java.text.SimpleDateFormat
 
 class PostAdapter(
     var documents: QuerySnapshot,
@@ -29,6 +34,7 @@ class PostAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val document = documents.documents.get(position)
         var db = Firebase.firestore
+        var auth = Firebase.auth
         if (holder is PostItemViewHolder) {
             val postUserId = document.data!!.get("userId") as String
             var postUsername: String? = ""
@@ -42,6 +48,19 @@ class PostAdapter(
                     Glide.with(mContext).load(document.data!!.get("imageUrl") as String).into(holder.imgBlogPost)
                     if (postUserImageUrl != null) {
                         Glide.with(mContext).load(postUserImageUrl).apply(RequestOptions.circleCropTransform()).into(holder.imgUserPost)
+                    }
+                }
+                holder.itemView.setOnClickListener{
+                    val intent = Intent(mContext, PostDetailActivity::class.java)
+                    intent.putExtra("txtPostShortText", document.data!!.get("shortText") as String)
+                    intent.putExtra("imgPost", document.data!!.get("imageUrl") as String)
+                    intent.putExtra("txtPostUsername", postUsername)
+                    intent.putExtra("imgUserPost", postUserImageUrl)
+                    val sdf = SimpleDateFormat("dd/MM/yyyy")
+                    intent.putExtra("postCreateAt", sdf.format((document.data!!.get("createAt") as Timestamp).toDate()))
+                    db.collection("users").whereEqualTo("email", auth.currentUser?.email).get().addOnSuccessListener { doc2 ->
+                        intent.putExtra("imgCurrentUser", doc2.documents[0].getString("profileImageUrl"))
+                        mContext.startActivity(intent)
                     }
                 }
             }
