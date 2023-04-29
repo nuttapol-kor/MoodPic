@@ -60,6 +60,8 @@ class LoginActivity : AppCompatActivity() {
                 startActivity(Intent(this, HomeActivity::class.java))
             } else {
                 Toast.makeText(this, task.exception?.message, Toast.LENGTH_LONG).show()
+                progressBar.visibility = View.INVISIBLE
+                loginBtn.visibility = View.VISIBLE
             }
         }
     }

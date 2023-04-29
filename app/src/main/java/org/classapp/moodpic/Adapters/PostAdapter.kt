@@ -58,6 +58,7 @@ class PostAdapter(
                     intent.putExtra("imgUserPost", postUserImageUrl)
                     val sdf = SimpleDateFormat("dd/MM/yyyy")
                     intent.putExtra("postCreateAt", sdf.format((document.data!!.get("createAt") as Timestamp).toDate()))
+                    intent.putExtra("postId", document.id)
                     db.collection("users").whereEqualTo("email", auth.currentUser?.email).get().addOnSuccessListener { doc2 ->
                         intent.putExtra("imgCurrentUser", doc2.documents[0].getString("profileImageUrl"))
                         mContext.startActivity(intent)
