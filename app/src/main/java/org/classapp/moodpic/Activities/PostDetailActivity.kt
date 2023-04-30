@@ -2,6 +2,7 @@ package org.classapp.moodpic.Activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
@@ -12,6 +13,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import org.classapp.moodpic.Adapters.CommentAdapter
@@ -86,6 +88,7 @@ class PostDetailActivity : AppCompatActivity() {
             )
             db.collection("comments").add(commentObj.toMap()).addOnSuccessListener {
                 editTextComment.text.clear()
+                getCommentFromFirebase(postId!!)
             }.addOnFailureListener { exception ->
                 Toast.makeText(this, exception.message, Toast.LENGTH_SHORT).show()
             }
@@ -101,13 +104,14 @@ class PostDetailActivity : AppCompatActivity() {
 
     private fun getCommentFromFirebase(postId: String) {
         val db = Firebase.firestore
-        db.collection("comments").whereEqualTo("postId", postId).get().addOnSuccessListener {
+        db.collection("comments").whereEqualTo("postId", postId).orderBy("createAt", Query.Direction.DESCENDING).get().addOnSuccessListener {
             if (!it.isEmpty) {
                 commentAdapter = CommentAdapter(it, this)
                 commentRecyclerView?.adapter = commentAdapter
             }
         }.addOnFailureListener { exception ->
             Toast.makeText(this, exception.message, Toast.LENGTH_SHORT).show()
+            Log.e("getCommentFromFirebase", "Error getting comments", exception)
         }
 
     }

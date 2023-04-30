@@ -30,6 +30,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
@@ -125,6 +126,7 @@ class HomeFragment : Fragment() {
                                 Toast.makeText(requireActivity(), "Your post have been created!!", Toast.LENGTH_SHORT).show()
                                 createPostBtn.visibility = View.VISIBLE
                                 createProgressBar.visibility = View.INVISIBLE
+                                getDataFromFirebase()
                                 popupAddPost.dismiss()
                             }.addOnFailureListener{ exception ->
                                 Toast.makeText(requireActivity(), exception.message, Toast.LENGTH_SHORT).show()
@@ -162,7 +164,7 @@ class HomeFragment : Fragment() {
 
     private fun getDataFromFirebase() {
         val db = Firebase.firestore
-        db.collection("posts").get().addOnSuccessListener { result ->
+        db.collection("posts").orderBy("createAt", Query.Direction.DESCENDING).get().addOnSuccessListener { result ->
             postAdapter = PostAdapter(result, requireContext())
             postRecyclerView?.adapter = postAdapter
         }.addOnFailureListener{ exception -> Toast.makeText(requireActivity(), exception.message, Toast.LENGTH_LONG).show()}
