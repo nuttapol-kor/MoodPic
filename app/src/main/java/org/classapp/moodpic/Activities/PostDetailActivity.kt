@@ -18,6 +18,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import org.classapp.moodpic.Adapters.CommentAdapter
 import org.classapp.moodpic.Models.Comment
+import org.classapp.moodpic.Models.Emotion
 import org.classapp.moodpic.R
 
 class PostDetailActivity : AppCompatActivity() {
@@ -37,6 +38,10 @@ class PostDetailActivity : AppCompatActivity() {
     private var commentAdapter: CommentAdapter? = null
     private var commentLayoutManager: RecyclerView.LayoutManager? = null
 
+    private lateinit var happyValTxt: TextView
+    private lateinit var funnyValTxt: TextView
+    private lateinit var sadValTxt: TextView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_post_detail)
@@ -54,6 +59,10 @@ class PostDetailActivity : AppCompatActivity() {
         happyBtn = findViewById(R.id.postDetailHappyBtn)
         funnyBtn = findViewById(R.id.postDetailFunnyBtn)
         sadBtn = findViewById(R.id.postDetailSadBtn)
+
+        happyValTxt = findViewById(R.id.happyVal)
+        funnyValTxt = findViewById(R.id.funnyVal)
+        sadValTxt = findViewById(R.id.sadVal)
 
         val postImage = intent.extras?.getString("imgPost")
         val postedUserImage = intent.extras?.getString("imgUserPost")
@@ -100,6 +109,24 @@ class PostDetailActivity : AppCompatActivity() {
         commentRecyclerView?.layoutManager = commentLayoutManager
 
         getCommentFromFirebase(postId!!)
+
+        // set emotion button
+        happyBtn.setOnClickListener {
+            val userId = auth.currentUser?.uid
+            setEmotionType("happy", postId!!, userId!!)
+            getEmotionFromFirebase(postId!!)
+        }
+        funnyBtn.setOnClickListener {
+            val userId = auth.currentUser?.uid
+            setEmotionType("funny", postId!!, userId!!)
+            getEmotionFromFirebase(postId!!)
+        }
+        sadBtn.setOnClickListener {
+            val userId = auth.currentUser?.uid
+            setEmotionType("sad", postId!!, userId!!)
+            getEmotionFromFirebase(postId!!)
+        }
+        getEmotionFromFirebase(postId!!)
     }
 
     private fun getCommentFromFirebase(postId: String) {
@@ -113,6 +140,48 @@ class PostDetailActivity : AppCompatActivity() {
             Toast.makeText(this, exception.message, Toast.LENGTH_SHORT).show()
             Log.e("getCommentFromFirebase", "Error getting comments", exception)
         }
+    }
 
+    private fun getEmotionFromFirebase(postId: String) {
+        val db = Firebase.firestore
+        db.collection("emotions").whereEqualTo("postId", postId).get().addOnSuccessListener {
+            var happyCount = 0
+            var funnyCount = 0
+            var sadCount = 0
+            if (!it.isEmpty) {
+                for (document in it) {
+                    val emotionType = document.data.get("emotionType") as String
+                    if (emotionType.equals("happy")) {
+                        happyCount++
+                    } else if (emotionType.equals("funny")) {
+                        funnyCount++
+                    } else if (emotionType.equals("sad")) {
+                        sadCount++
+                    }
+                }
+            }
+            happyValTxt.text = happyCount.toString()
+            funnyValTxt.text = funnyCount.toString()
+            sadValTxt.text = sadCount.toString()
+        }.addOnFailureListener { exception ->
+            Toast.makeText(this, exception.message, Toast.LENGTH_SHORT).show()
+            Log.e("getCommentFromFirebase", "Error getting comments", exception)
+        }
+    }
+
+    private fun setEmotionType(emotionType: String, postId: String, userId: String) {
+        var db = Firebase.firestore
+        val emotionCreateAt = FieldValue.serverTimestamp()
+        val emotionObj = Emotion(
+            emotionType = emotionType,
+            postId = postId!!,
+            userId = userId!!,
+            createAt = emotionCreateAt
+        )
+        db.collection("emotions").add(emotionObj.toMap()).addOnSuccessListener {
+
+        }.addOnFailureListener { exception ->
+            Toast.makeText(this, exception.message, Toast.LENGTH_SHORT).show()
+        }
     }
 }
